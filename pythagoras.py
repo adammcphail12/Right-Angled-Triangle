@@ -1,8 +1,7 @@
-# we need to import libraries.
 import math
 
+import math
 
-# first we will look at a pythagoras function
 
 def pythagoras(a, b, c):
     # need a not blank to figure out which variable is missing, so we can solve for it.
@@ -22,12 +21,21 @@ def pythagoras(a, b, c):
     # Creates a total score, score needs to be 2 to use pythagoras function.
     sides_found = a_missing + b_missing + c_missing
 
-    if sides_found < 2:
-        print('Sorry You need at least two sides to solve for a third side')
-    else:
-        print('Ok we will solve now ... (Press Enter to begin solver)')
-        input()
-        if c_missing == 0:
-            c_pow_2 = (a ^ 2) + (b ^ 2)
-            missing_side = math.sqrt(c_pow_2)
-            return missing_side
+    if sides_found == 3:
+        return None
+    elif c_missing == 0:
+        c_pow_2 = (a ** 2) + (b ** 2)
+        missing_side = math.sqrt(c_pow_2)
+        return missing_side
+    elif b_missing == 0:
+        b_pow_2 = (c ** 2) - (a ** 2)
+        missing_side = math.sqrt(b_pow_2)
+        return missing_side
+    elif a_missing == 0:
+        a_pow_2 = (c ** 2) - (b ** 2)
+        missing_side = math.sqrt(a_pow_2)
+        return missing_side
+
+
+solve = pythagoras(8, 8, '')
+print(solve)
