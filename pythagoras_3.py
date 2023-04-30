@@ -18,5 +18,5 @@ def pythagoras(a, b, c):
     return missing_side  # Return the missing side.
 
 
-solve = pythagoras(8, 8, '')
+solve = pythagoras(41, 62, '')
 print(solve)

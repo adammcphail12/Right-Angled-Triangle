@@ -36,4 +36,5 @@ def solve_right_triangle():
 
 
 # Call the function to start the solver
+print('Right Angle Triangle Solver')
 solve_right_triangle()
