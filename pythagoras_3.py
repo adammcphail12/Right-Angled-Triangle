@@ -1,17 +1,17 @@
 import math
 
 
-def pythagoras(a, b, c):
+def pythagoras(side_a, side_b, side_c):
     # Check which variable is missing and solve for it.
     def base_length(hyp, alt):
         base = math.sqrt((hyp ** 2) - (alt ** 2))
         return base
-    if not a:
-        missing_side = base_length(c, b)
-    elif not b:
-        missing_side = base_length(c, a)
-    elif not c:
-        missing_side = math.hypot(a, b)
+    if not side_a:
+        side_a = base_length(side_c, side_b)
+    elif not side_b:
+        side_b = base_length(side_c, side_a)
+    elif not side_c:
+        side_c = math.hypot(side_a, side_b)
     else:
         return None  # if all sides are given, the function returns None.
 

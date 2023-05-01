@@ -24,7 +24,7 @@ def num_input(task, question, error):
             try:
                 # input has to be a integer or else it will get a
                 # value error.
-                response = int(input(question))
+                response = float(input(question))
                 # if the answer is greater than 0 then it will return
                 # the input as there response.
                 if 0 < response:
@@ -37,49 +37,92 @@ def num_input(task, question, error):
         return ''
 
 
-def pythagoras(a, b, c):
-    # Check which variable is missing and solve for it.
+def solve_triangle(side_a, side_b, side_c, angle_A, angle_B, angle_C):
+    # Check that we have enough information to solve the triangle
+    sides = [side_a, side_b, side_c]
+    angles = [angle_A, angle_B, angle_C]
+    known_sides = sum(side is not None for side in sides)
+    known_angles = sum(angle is not None for angle in angles)
+    if known_sides + known_angles < 3:
+        print("Not enough information to solve triangle.")
+        return
 
-    def base_length(hyp, alt):
-        base = math.sqrt((hyp ** 2) - (alt ** 2))
-        return base
+    # if we have 2 sides we can solve for the third side using pythagorus
+    if known_sides == 2:
 
-    if not a:
-        missing_side = base_length(c, b)
-        side_missing = 'a'
-    elif not b:
-        missing_side = base_length(c, a)
-        side_missing = 'b'
-    elif not c:
-        missing_side = math.hypot(a, b)
-        side_missing = 'c'
+        def base_length(hyp, alt):
+            base = math.sqrt((hyp ** 2) - (alt ** 2))
+            return base
 
-    return missing_side, side_missing  # Return the missing side.
+        if not side_a:
+            side_a = base_length(side_c, side_b)
+        elif not side_b:
+            side_b = base_length(side_c, side_a)
+        elif not side_c:
+            side_c = math.hypot(side_a, side_b)
 
+    known_sides = sum(side is not None for side in sides)
 
-# Base Code
+    # If we have three sides, use law of cosines to find angles
+    if known_sides == 3:
+        angle_A = math.degrees(math.acos((side_b ** 2 + side_c ** 2 - side_a ** 2) / (2 * side_b * side_c)))
+        angle_B = math.degrees(math.acos((side_c ** 2 + side_a ** 2 - side_b ** 2) / (2 * side_c * side_a)))
+        angle_C = math.degrees(math.acos((side_a ** 2 + side_b ** 2 - side_c ** 2) / (2 * side_a * side_b)))
+        return side_a, side_b, side_c, angle_A, angle_B, angle_C
+    # If we have two sides and an angle, use law of sines to find remaining parts
+    elif known_sides == 2 and known_angles == 1:
+        if side_a is None:
+            side_a = side_b * math.sin(math.radians(angle_B)) / math.sin(math.radians(angle_A))
+        elif side_b is None:
+            side_b = side_a * math.sin(math.radians(angle_A)) / math.sin(math.radians(angle_B))
+        elif side_c is None:
+            angle = next((angle for angle in angles if angle is not None))
+            side_c = side_a / math.sin(math.radians(angle_A)) * math.sin(math.radians(angle))
+        return side_a, side_b, side_c, angle_A, angle_B, angle_C
+    # If we have two angles and a side, use angle sum property to find remaining angle
+    elif known_angles == 2 and known_sides == 1:
+        if angle_A is None:
+            angle_A = 180 - angle_B - angle_C
+        elif angle_B is None:
+            angle_B = 180 - angle_A - angle_C
+        elif angle_C is None:
+            angle_C = 180 - angle_A - angle_B
+        side = next((s for s in sides if s is not None))
+        if side_a is None:
+            side_a = side * math.sin(math.radians(angle_A)) / math.sin(math.radians(angle_C))
+        elif side_b is None:
+            side_b = side * math.sin(math.radians(angle_B)) / math.sin(math.radians(angle_C))
+        elif side_c is None:
+            side_c = side * math.sin(math.radians(angle_C)) / math.sin(math.radians(angle_A))
+        return side_a, side_b, side_c, angle_A, angle_B, angle_C
+    # If we have one side and one angle, use basic trigonometry to find remaining parts
+    elif known_sides == 1 and known_angles == 1:
+        if angle_A is None:
+            angle_A = math.degrees(math.asin(side_a / side_b * math.sin(math.radians(angle_B))))
+            angle_C = 180 - angle_A - angle_B
+            side_c = side_b * math.sin(math.radians(angle_C)) / math.sin(math.radians(angle_B))
+        elif angle_B is None:
+            angle_B = math.degrees(math.asin(side_b / side_a * math.sin(math.radians(angle_A))))
+            angle_C = 180 - angle_A - angle_B
+            if side_a is None:
+                side_a = side_b * math.sin(math.radians(angle_A)) / math.sin(math.radians(angle_B))
+            elif side_b is None:
+                side_b = side_a * math.sin(math.radians(angle_B)) / math.sin(math.radians(angle_A))
+            elif side_c is None:
+                side_c = side_a / math.sin(math.radians(angle_A)) * math.sin(math.radians(angle_C))
+        else:
+            print("Invalid input.")
+            return ''
+        return side_a, side_b, side_c, angle_A, angle_B, angle_C
 
-tick = 0
 
 side_a = num_input('Side A', 'Please enter a positive whole integer.', 'Sorry that is not a positive whole integer')
 side_b = num_input('Side B', 'Please enter a positive whole integer.', 'Sorry that is not a positive whole integer')
-side_c = num_input('Side C', 'Please enter a positive whole integer.', 'Sorry that is not a positive whole integer')
+side_c = num_input('Side C', 'Please enter a positive value.', 'Sorry that is not a positive whole integer')
+angle_a = num_input('Angle A', 'Please enter a positive value.', 'Sorry that is not a positive whole integer')
+angle_b = num_input('Angle B', 'Please enter a positive value.', 'Sorry that is not a positive whole integer')
+angle_c = num_input('Angle C', 'Please enter a positive value.', 'Sorry that is not a positive whole integer')
 
-if side_a != '':
-    tick += 1
-if side_b != '':
-    tick += 1
-if side_c != '':
-    tick += 1
+triangle = solve_triangle(side_a, side_b, side_c, angle_a, angle_b, angle_c)
 
-if tick == 2:
-    solve = pythagoras(side_a, side_b, side_c)
-    print('Your side missing is side {} and its value is {}'.format(solve[1], solve[0]))
-elif tick == 3:
-    print('You have all three sides all ready :)')
-elif tick == 1:
-    print('You only have one side, which is not enough to perform pythagaros')
-elif tick == 0:
-    print('You have no sides :(')
-
-
+print(triangle)
