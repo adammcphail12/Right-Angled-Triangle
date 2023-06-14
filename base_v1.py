@@ -34,10 +34,10 @@ def num_input(task, question, error):
             except ValueError:
                 print(error)
     else:
-        return ''
+        return None
 
 
-def solve_triangle(side_a, side_b, side_c, angle_A, angle_B, angle_C):
+def solve_triangle(side_a=None, side_b=None, side_c=None, angle_A=None, angle_B=None, angle_C=None):
     # Check that we have enough information to solve the triangle
     sides = [side_a, side_b, side_c]
     angles = [angle_A, angle_B, angle_C]
@@ -46,23 +46,6 @@ def solve_triangle(side_a, side_b, side_c, angle_A, angle_B, angle_C):
     if known_sides + known_angles < 3:
         print("Not enough information to solve triangle.")
         return
-
-    # if we have 2 sides we can solve for the third side using pythagorus
-    if known_sides == 2:
-
-        def base_length(hyp, alt):
-            base = math.sqrt((hyp ** 2) - (alt ** 2))
-            return base
-
-        if not side_a:
-            side_a = base_length(side_c, side_b)
-        elif not side_b:
-            side_b = base_length(side_c, side_a)
-        elif not side_c:
-            side_c = math.hypot(side_a, side_b)
-
-    known_sides = sum(side is not None for side in sides)
-
     # If we have three sides, use law of cosines to find angles
     if known_sides == 3:
         angle_A = math.degrees(math.acos((side_b ** 2 + side_c ** 2 - side_a ** 2) / (2 * side_b * side_c)))
@@ -95,24 +78,10 @@ def solve_triangle(side_a, side_b, side_c, angle_A, angle_B, angle_C):
         elif side_c is None:
             side_c = side * math.sin(math.radians(angle_C)) / math.sin(math.radians(angle_A))
         return side_a, side_b, side_c, angle_A, angle_B, angle_C
-    # If we have one side and one angle, use basic trigonometry to find remaining parts
-    elif known_sides == 1 and known_angles == 1:
-        if angle_A is None:
-            angle_A = math.degrees(math.asin(side_a / side_b * math.sin(math.radians(angle_B))))
-            angle_C = 180 - angle_A - angle_B
-            side_c = side_b * math.sin(math.radians(angle_C)) / math.sin(math.radians(angle_B))
-        elif angle_B is None:
-            angle_B = math.degrees(math.asin(side_b / side_a * math.sin(math.radians(angle_A))))
-            angle_C = 180 - angle_A - angle_B
-            if side_a is None:
-                side_a = side_b * math.sin(math.radians(angle_A)) / math.sin(math.radians(angle_B))
-            elif side_b is None:
-                side_b = side_a * math.sin(math.radians(angle_B)) / math.sin(math.radians(angle_A))
-            elif side_c is None:
-                side_c = side_a / math.sin(math.radians(angle_A)) * math.sin(math.radians(angle_C))
-        else:
-            print("Invalid input.")
-            return ''
+    if known_sides == 3:
+        angle_A = math.degrees(math.acos((side_b ** 2 + side_c ** 2 - side_a ** 2) / (2 * side_b * side_c)))
+        angle_B = math.degrees(math.acos((side_c ** 2 + side_a ** 2 - side_b ** 2) / (2 * side_c * side_a)))
+        angle_C = math.degrees(math.acos((side_a ** 2 + side_b ** 2 - side_c ** 2) / (2 * side_a * side_b)))
         return side_a, side_b, side_c, angle_A, angle_B, angle_C
 
 
@@ -122,6 +91,13 @@ side_c = num_input('Side C', 'Please enter a positive value.', 'Sorry that is no
 angle_a = num_input('Angle A', 'Please enter a positive value.', 'Sorry that is not a positive whole integer')
 angle_b = num_input('Angle B', 'Please enter a positive value.', 'Sorry that is not a positive whole integer')
 angle_c = num_input('Angle C', 'Please enter a positive value.', 'Sorry that is not a positive whole integer')
+
+print('Side A: ', side_a)
+print('Side B: ', side_b)
+print('Side C: ', side_c)
+print('Angle A: ', angle_a)
+print('Angle B: ', angle_b)
+print('Angle C: ', angle_c)
 
 triangle = solve_triangle(side_a, side_b, side_c, angle_a, angle_b, angle_c)
 
