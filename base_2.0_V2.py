@@ -36,7 +36,7 @@ def statement_gen(statement, decoration,lines,dec_num,del_num) :
     return ""
 
 # this is the input function that i use to take in angles.
-def num_input(question, error, side_or_angle):
+def num_input(question, error, side_or_angle, hypot_found):
     while True:
         try:
             response = float(input(question))
@@ -48,8 +48,11 @@ def num_input(question, error, side_or_angle):
             elif side_or_angle == 1:
                 
                 if response > 0:
-                    hypot = yes_no('\nIs this side your hypotonuse? ')
-                    return response, hypot
+                    if hypot_found == 'yes':
+                        return response, 'no'
+                    else:
+                        hypot = yes_no('\nIs this side your hypotonuse? ')
+                        return response, hypot
                 else:
                     print(error) 
         except ValueError:
@@ -57,18 +60,23 @@ def num_input(question, error, side_or_angle):
 
 def solve_triangle(hypotnuse, small_side_1, small_side_2, angle_1, angle_2, angle_3):
     
-    if hypotnuse is not None:
+    if hypotnuse is not None and angle_1 is not None:
         angle_1 = mt.radians(angle_1)
         small_side_1 = mt.sin(angle_1) * hypotnuse
         small_side_1 = round_to(small_side_1, 4)
         small_side_2 = mt.sqrt((hypotnuse ** 2) - (small_side_1 ** 2))
         angle_1 = mt.degrees(angle_1)
-    elif small_side_1 is not None:
+    elif small_side_1 is not None and angle_1 is not None:
         angle_1 = mt.radians(angle_1)
         small_side_2 = mt.tan(angle_1) * small_side_1
         small_side_2 = round_to(small_side_2, 4)
         hypotnuse = mt.hypot(small_side_1, small_side_2)
         angle_1 = mt.degrees(angle_1)
+    elif angle_1 is None:
+        if hypotnuse is None:
+            hypotnuse = mt.hypot(small_side_1,small_side_2)
+            print(hypotnuse)
+            angle_3 = 90
 
     
     return(hypotnuse, small_side_1, small_side_2, angle_1, angle_2, angle_3)
@@ -99,7 +107,7 @@ if instructions == 'yes':
     cont = yes_no('\nKnowing this information, would you like to\ncontinue with the program? ')
     if cont == 'yes':
         #instructions 
-        print('\nThis function works by taking in one of the sides of your triangle, and one of the \nangles that is not 90 degrees. The program will solve the rest of the sides and angles for you.\n\n')
+        print('\nThis function works by taking in two values of data from your triangle.\nThe program will solve the rest of the sides and angles for you.\n\n')
         input(statement_gen('Press ENTER To Continue...', '-', 1, 6, 0))
         print('\n\nYou will also need to label if your side is the hypotonuse or not.\nThis helps our computer solve the triangle with the most precision.\n(For those that do not know what the hypotonuse is, it is the largest side on the triangle.)\n\n')
         input(statement_gen('Press ENTER To Continue...', '-', 1, 6, 0))
@@ -120,20 +128,50 @@ else:
 # we need to take in one angle so we can determine the other two angles.
 
 statement_gen('Program Starts', '*', 3, 9, 0)
-angle_1 = num_input('\n\nWhat number represents your first angle?\nThis is not the 90 degree angle, this is one of your smaller angles : ', '\nThat is not a valid number, should be a number\nthat is greater then 0 and less then 90', 0)
-angle_2 = 90 - angle_1
-angle_3 = 90
-print(angle_1, angle_2, angle_3)
-
-side = num_input('\nWhat number represents your side?', '\nThat is not a valid number, number should be positive.', 1)
-if side[1] == 'yes':
-    hypotnuse = side[0]
-    small_side_1 = None
-    small_side_2 = None
+any_angles = yes_no('\n\nDo you have any angles on your triangle? \n(Not including the 90 degree angle that is in the square corner of your triangle)?')
+if any_angles == 'yes':
+    angle_1 = num_input('\n\nWhat number represents your first angle?\nThis is not the 90 degree angle, this is one of your smaller angles : ', '\nThat is not a valid number, should be a number\nthat is greater then 0 and less then 90', 0, 'no')
+    angle_2 = 90 - angle_1
+    angle_3 = 90
+    side = num_input('\nWhat number represents your side?', '\nThat is not a valid number, number should be positive.', 1, 'no')
+    if side[1] == 'yes':
+        hypotnuse = side[0]
+        small_side_1 = None
+        small_side_2 = None
+    else:
+        small_side_1 = side[0]
+        small_side_2 = None
+        hypotnuse = None
 else:
-    small_side_1 = side[0]
-    small_side_2 = None
-    hypotnuse = None
+    angle_1 = None
+    angle_2 = None
+    angle_3 = 90
+    side_1 = num_input('\nWhat number represents your first side?', '\nThat is not a valid number, number should be positive.', 1, 'no')
+    if side_1[1] == 'yes':
+        hypotnuse = side_1[0]
+        side_2 = num_input('\nWhat number represents your second smaller side?', '\nThat is not a valid number, number should be positive.', 1, 'yes')
+        small_side_1 = side_2[0]
+        small_side_2 = None
+        print(hypotnuse)
+        print(small_side_1)
+    else: 
+        small_side_1 = side_1[0]
+        side_2 = num_input('\nWhat number represents your first side?', '\nThat is not a valid number, number should be positive.', 1, 'no')
+        if side_2[1] == 'yes':
+            hypotnuse = side_2[0]
+            small_side_2 = None
+        else:
+            small_side_2 = side_2[0]
+            hypotnuse = None
+print(hypotnuse, small_side_1, small_side_2, angle_1, angle_2, angle_3)
+        
+    
+
+
+
+
+
+
 
 print('\n\n')
 input(statement_gen('Press ENTER To Continue...', '-', 1, 6, 0))
