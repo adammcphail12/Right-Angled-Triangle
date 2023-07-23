@@ -1,4 +1,5 @@
 import math as mt
+import pandas as pd
 
 # Yes no checker.
 def yes_no(question):
@@ -133,46 +134,53 @@ else:
 #------$ Data Input $------#
 
 # we need to take in one angle so we can determine the other two angles.
-
-statement_gen('Program Starts', '*', 3, 9, 0)
-any_angles = yes_no('\n\nDo you have any angles on your triangle? \n(Not including the 90 degree angle that is in the square corner of your triangle)?')
-if any_angles == 'yes':
-    angle_1 = num_input('\n\nWhat number represents your first angle?\nThis is not the 90 degree angle, this is one of your smaller angles : ', '\nThat is not a valid number, should be a number\nthat is greater then 0 and less then 90', 0, 'no')
-    angle_2 = 90 - angle_1
-    angle_3 = 90
-    side = num_input('\nWhat number represents your side?', '\nThat is not a valid number, number should be positive.', 1, 'no')
-    if side[1] == 'yes':
-        hypotnuse = side[0]
-        small_side_1 = None
-        small_side_2 = None
-    else:
-        small_side_1 = side[0]
-        small_side_2 = None
-        hypotnuse = None
-else:
+loop = True
+while loop is True:
+    hypotnuse = None
+    small_side_1 = None
+    small_side_2 = None
     angle_1 = None
     angle_2 = None
     angle_3 = 90
-    side_1 = num_input('\nWhat number represents your first side?', '\nThat is not a valid number, number should be positive.', 1, 'no')
-    if side_1[1] == 'yes':
-        hypotnuse = side_1[0]
-        side_2 = num_input('\nWhat number represents your second smaller side?', '\nThat is not a valid number, number should be positive.', 1, 'yes')
-        small_side_1 = side_2[0]
-        small_side_2 = None
-        print(hypotnuse)
-        print(small_side_1)
-    else: 
-        small_side_1 = side_1[0]
-        side_2 = num_input('\nWhat number represents your first side?', '\nThat is not a valid number, number should be positive.', 1, 'no')
-        if side_2[1] == 'yes':
-            hypotnuse = side_2[0]
+    statement_gen('Program Starts', '*', 3, 9, 0)
+    any_angles = yes_no('\n\nDo you have any angles on your triangle? \n(Not including the 90 degree angle that is in the square corner of your triangle)?')
+    if any_angles == 'yes':
+        angle_1 = num_input('\n\nWhat number represents your first angle?\nThis is not the 90 degree angle, this is one of your smaller angles : ', '\nThat is not a valid number, should be a number\nthat is greater then 0 and less then 90', 0, 'no')
+        angle_2 = 90 - angle_1
+        angle_3 = 90
+        side = num_input('\nWhat number represents your side?', '\nThat is not a valid number, number should be positive.', 1, 'no')
+        if side[1] == 'yes':
+            hypotnuse = side[0]
+            small_side_1 = None
             small_side_2 = None
         else:
-            small_side_2 = side_2[0]
+            small_side_1 = side[0]
+            small_side_2 = None
             hypotnuse = None
-print(hypotnuse, small_side_1, small_side_2, angle_1, angle_2, angle_3)
+    else:
+        angle_1 = None
+        angle_2 = None
+        angle_3 = 90
+        side_1 = num_input('\nWhat number represents your first side?', '\nThat is not a valid number, number should be positive.', 1, 'no')
+        if side_1[1] == 'yes':
+            hypotnuse = side_1[0]
+            side_2 = num_input('\nWhat number represents your second smaller side?', '\nThat is not a valid number, number should be positive.', 1, 'yes')
+            small_side_1 = side_2[0]
+            small_side_2 = None
+            print(hypotnuse)
+            print(small_side_1)
+        else: 
+            small_side_1 = side_1[0]
+            side_2 = num_input('\nWhat number represents your first side?', '\nThat is not a valid number, number should be positive.', 1, 'no')
+            if side_2[1] == 'yes':
+                hypotnuse = side_2[0]
+                small_side_2 = None
+            else:
+                small_side_2 = side_2[0]
+                hypotnuse = None
+    print(hypotnuse, small_side_1, small_side_2, angle_1, angle_2, angle_3)
+            
         
-    
 
 
 
@@ -180,28 +188,38 @@ print(hypotnuse, small_side_1, small_side_2, angle_1, angle_2, angle_3)
 
 
 
-print('\n\n')
-input(statement_gen('Press ENTER To Continue...', '-', 1, 6, 0))
-print('\n\nOur computer will know solve your triangle for you.\nPlease wait one moment.')
+    print('\n\n')
+    input(statement_gen('Press ENTER To Continue...', '-', 1, 6, 0))
+    print('\n\nOur computer will know solve your triangle for you.\nPlease wait one moment.')
 
 
-triangle = solve_triangle(hypotnuse, small_side_1, small_side_2, angle_1, angle_2, angle_3)
+    triangle = solve_triangle(hypotnuse, small_side_1, small_side_2, angle_1, angle_2, angle_3)
+    data = {'Name': ['Hypot', 'Small Side 1', 'Small Side 2', 'Angle 1', 'Angle 2', 'Angle 3'], 'Value':triangle}
+    df = pd.DataFrame(data)
+    print(df.to_string(index = False))
 
-hypotnuse = triangle[0]
-small_side_1 = triangle[1]
-small_side_2 = triangle[2]
-angle_1 = triangle[3]
-angle_2 = triangle[4]
-angle_3 = triangle[5]
+    hypotnuse = triangle[0]
+    small_side_1 = triangle[1]
+    small_side_2 = triangle[2]
+    angle_1 = triangle[3]
+    angle_2 = triangle[4]
+    angle_3 = triangle[5]
 
-print('\n')
-input(statement_gen('Press ENTER To See Results', '-', 1, 6, 0))
+    print('\n')
+    input(statement_gen('Press ENTER to have results explained', '-', 1, 6, 0))
 
-print('\n\nIn this triangle your Hypotnuse is {}.\nYour first small side is {}, Your second small side is {}.\n\n'.format(hypotnuse, small_side_1, small_side_2))
+    print('\n\nIn this triangle your Hypotnuse is {}.\nYour first small side is {}, Your second small side is {}.\n\n'.format(hypotnuse, small_side_1, small_side_2))
 
-input(statement_gen('Press ENTER To Continue', '-', 1, 6, 0))
+    input(statement_gen('Press ENTER to Continue', '-', 1, 6, 0))
 
-print('\n\nIn this triangle your first angle is {}, your second angle is {}\nYour third angle is 90'.format(angle_1, angle_2))
+    print('\n\nIn this triangle your first angle is {}, your second angle is {}\nYour third angle is 90'.format(angle_1, angle_2))
+
+    repeat = yes_no('Would you like to run the program again?')
+    if repeat == 'yes':
+        loop = True
+    else:
+        loop = False
+
 
 
 
