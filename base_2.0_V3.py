@@ -40,14 +40,16 @@ def statement_gen(statement, decoration,lines,dec_num,del_num) :
 def num_input(question, error, side_or_angle, hypot_found):
     while True:
         try:
+            # asks the question 
             response = float(input(question))
             if side_or_angle == 0:
+                # makes sure answer is valid if its a angle
                 if response < 90 and response > 0:
                     return response
                 else:
                     print(error) 
             elif side_or_angle == 1:
-                
+                # if its a side makes sure its positive and asks if its a hypotnuse                 
                 if response > 0:
                     if hypot_found == 'yes':
                         return response, 'no'
@@ -55,12 +57,15 @@ def num_input(question, error, side_or_angle, hypot_found):
                         hypot = yes_no('\nIs this side your hypotonuse? ')
                         return response, hypot
                 else:
+                    #prints errors
                     print(error) 
         except ValueError:
+            #prints errors
             print(error)
 
 def solve_triangle(hypotnuse, small_side_1, small_side_2, angle_1, angle_2, angle_3):
-    
+
+    # This calculates the sin length
     if hypotnuse is not None and angle_1 is not None:
         angle_1 = mt.radians(angle_1)
         small_side_1 = mt.sin(angle_1) * hypotnuse
@@ -68,29 +73,28 @@ def solve_triangle(hypotnuse, small_side_1, small_side_2, angle_1, angle_2, angl
         small_side_2 = mt.sqrt((hypotnuse ** 2) - (small_side_1 ** 2))
         small_side_2 = round_to(small_side_2, 4)
         angle_1 = mt.degrees(angle_1)
+        #this calculates the tan length
     elif small_side_1 is not None and angle_1 is not None:
         angle_1 = mt.radians(angle_1)
         small_side_2 = mt.tan(angle_1) * small_side_1
         small_side_2 = round_to(small_side_2, 4)
         hypotnuse = mt.hypot(small_side_1, small_side_2)
         angle_1 = mt.degrees(angle_1)
+        #this is the method is for only side lengths.
     elif angle_1 is None:
         if hypotnuse is None:
             hypotnuse = mt.hypot(small_side_1,small_side_2)
         elif small_side_2 is None:
             small_side_2 = mt.sqrt(hypotnuse ** 2  - small_side_1 ** 2)
-        print(hypotnuse)
         angle_3 = 90.00
-        print(small_side_1)
         angle_1 = round_to(mt.degrees(mt.asin(small_side_1 / hypotnuse)), 4)
-        print(angle_1)
         angle_2 = 90 - angle_1
 
     
     return(hypotnuse, small_side_1, small_side_2, angle_1, angle_2, angle_3)
 
 
-
+# this function rounds reults to sig figures
 def round_to(x, significant_figs):
    return round(x, significant_figs - mt.floor(mt.log10(abs(x))) - 1)
  
@@ -111,18 +115,22 @@ instructions_text = ['\nThis function works by taking in two values of data from
 , '\n\nYou will also need to label if your side is the hypotonuse or not.\nThis helps our computer solve the triangle with the most precision.\n(For those that do not know what the hypotonuse is, it is the largest side on the triangle.)\n\n'
 , '\n\nNow with tha all said and done we can start the program\n\n']
 
+#this  intiates the instruction set
 if instructions == 'yes':
     print('\n')
+    #prints fancy lines 
     statement_gen('Instructions', '*', 3, 9, 0)
     print('\n\nThis is a program designed to solve right angled triangles.\nIf your triangle is not right angled (ie: It does not have a square in one corner)\nPlease kindly exit this program as it will not help you.\n')
+    # this line is fancy and makes the user opress enter to continue - I have my instructions in a loop later that alternate text and this line - see ** 1
     input(statement_gen('Press ENTER To Continue...', '-', 1, 6, 0))
     cont = yes_no('\nKnowing this information, would you like to\ncontinue with the program? ')
     if cont == 'yes':
-        #instructions 
+        #instructions  - ** 1
         for x in instructions_text:
             print(x)
             input(statement_gen('Press ENTER To Continue...', '-', 1, 6, 0))
     else:
+        # allows the user to exit the program if they feel that it is not for them.
         print('\nThank you very much for using this program.\nWe are sorry that it doesnt meet your needs and wish\nyou best of luck with solving your problems.\n\n')
         statement_gen('Goodbye :))', '*', 3, 9, 0)
         exit()
